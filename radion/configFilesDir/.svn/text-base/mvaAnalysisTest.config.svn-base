@@ -1,0 +1,41 @@
+################################
+### config file to run  xAna ###
+################################
+
+## see ConfigReader.h for options
+
+### output directory
+outputDir: ./output_test/
+
+### analysis type is MVA, baseline
+analysisType: MVA
+setup: Prompt2012_ichep
+
+### energy scale correction
+energyScaleCorrection: ecalCalibFiles/EnergyScale2012_hcp_unblind_12fb.txt
+
+### luminosity
+luminosity: 12.00
+
+### potential pt cuts
+pt1_cut: 25
+pt2_cut: 25
+mgg_cut: 80
+
+### electron veto to run other , invert the veto
+invertElectronVeto: 0
+
+### test
+doTest: 0
+
+### syst on energy resolution oversmearing: -1, 0, +1 sigma
+systEnergyResolution: 0
+
+### PU Jet ID for 2012 analysis
+doPUJetID: 1
+
+### number of evts per job
+### when running on large ntuples, it allows to split
+### to input (several jobs attack the same file at different places)
+### default:  -1 (do all evts in roottuple)
+nEvtsPerJob: -1
