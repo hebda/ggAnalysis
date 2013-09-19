@@ -626,7 +626,8 @@ int xAna::HggTreeWriteLoop(const char* filename, int ijob,
     for (unsigned i = 0; i < goodJetsIndexRadion.size(); i++) {
       int iJet = goodJetsIndexRadion[i];
 
-      _minitree->radion_bJetTags->AddAt(jetCombinedSecondaryVtxMVABJetTags[iJet], i);
+      //_minitree->radion_bJetTags->AddAt(jetCombinedSecondaryVtxMVABJetTags[iJet], i);
+      _minitree->radion_bJetTags->AddAt(jetCombinedSecondaryVtxBJetTags[iJet], i);
 
       TLorentzVector* jet = new((*(_minitree->radion_jets))[_minitree->radion_jets->GetEntriesFast()]) TLorentzVector();
       jet->SetPtEtaPhiE(jetPt[iJet], jetEta[iJet], jetPhi[iJet], jetEn[iJet]);
