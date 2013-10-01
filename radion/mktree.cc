@@ -52,7 +52,7 @@ Double_t minMassJJ = 0;
 Double_t maxMassJJ = 1e+10;
 
 Bool_t includeWeightVars = kTRUE;
-Bool_t doKinFit = kFALSE;
+Bool_t doKinFit = kTRUE;
 
 // correct TLorentzVectors of gamma+gamma and jet+jet by putting the Higgs mass
 // to its place
@@ -72,6 +72,7 @@ void mktree_one(const char* infile, const char* treename)
    if (wd) wd->cd();
 
    // variables for input tree
+   int evtNum;
    float wei;
    TLorentzVector *gamma1, *gamma2;
    TClonesArray* jets;
@@ -82,6 +83,7 @@ void mktree_one(const char* infile, const char* treename)
    bJetTags = NULL;
 
    // associate input tree branches with variables
+   tree->SetBranchAddress("evtNum", &evtNum);
    tree->SetBranchAddress("wei", &wei);
    tree->SetBranchAddress("gamma1", &gamma1);
    tree->SetBranchAddress("gamma2", &gamma2);
@@ -98,6 +100,7 @@ void mktree_one(const char* infile, const char* treename)
    Int_t bJetTagCategory;
 
    // associate output tree branches with variables
+   treeOut->Branch("evtNum", &evtNum);
    treeOut->Branch("wei", &wei2);
    treeOut->Branch("mGG", &mGG);
    treeOut->Branch("mJJ", &mJJ);
