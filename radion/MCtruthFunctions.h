@@ -37,7 +37,7 @@ void xAna::fillMCtruthInfo_HiggsSignal( void ) {
   if( gind.size() != unsigned(2) ) {
     cerr << " fillMCtruthInfo_HiggsSignal[ERROR]: # of photons != 2, nphotons = "
 	 << gind.size() << endl;
-    if( gind.size() < 2 ) return;
+    if( gind.size() != 2 ) return;
   }
 
   TLorentzVector g[2],h;

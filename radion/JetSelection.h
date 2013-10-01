@@ -97,6 +97,7 @@ vector<int> xAna::selectJetsJEC(Int_t iPho1, Int_t iPho2, Int_t nvtx, Double_t w
     // cout << "   " << jetEn[i] << "   " << jetRawEn[i] << "   " << jetEn[i]/jetRawEn[i] << "   " << correction << endl;
 
     /// step 6
+    //     correction *= 1 + jetJECUnc[i];
     jetPt[i] = jetRawPt[i] * correction;
     jetEn[i] = jetRawEn[i] * correction;
     /// --------------------------------------------------------------------------------------//

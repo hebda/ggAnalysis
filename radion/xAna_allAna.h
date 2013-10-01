@@ -753,6 +753,7 @@ public :
    Float_t         jetJetProbabilityBJetTags[470];   //[nJet]
    Float_t         jetJetBProbabilityBJetTags[470];   //[nJet]
    Float_t         jetTrackCountingHighPurBJetTags[470];   //[nJet]
+   Float_t         jetJECUnc[470];   //[nJet]
    Int_t           jetPartonID[470];   //[nJet]
    Int_t           jetGenJetIndex[470];   //[nJet]
    Float_t         jetGenJetEn[470];   //[nJet]
@@ -1297,6 +1298,7 @@ public :
    TBranch        *b_jetJetProbabilityBJetTags;   //!
    TBranch        *b_jetJetBProbabilityBJetTags;   //!
    TBranch        *b_jetTrackCountingHighPurBJetTags;   //!
+   TBranch        *b_jetJECUnc;   //!
    TBranch        *b_jetPartonID;   //!
    TBranch        *b_jetGenJetIndex;   //!
    TBranch        *b_jetGenJetEn;   //!
@@ -2530,6 +2532,7 @@ void xAna::Init(TTree *tree) {
    fChain->SetBranchAddress("jetJetProbabilityBJetTags", jetJetProbabilityBJetTags, &b_jetJetProbabilityBJetTags);
    fChain->SetBranchAddress("jetJetBProbabilityBJetTags", jetJetBProbabilityBJetTags, &b_jetJetBProbabilityBJetTags);
    fChain->SetBranchAddress("jetTrackCountingHighPurBJetTags", jetTrackCountingHighPurBJetTags, &b_jetTrackCountingHighPurBJetTags);
+   fChain->SetBranchAddress("jetJECUnc", jetJECUnc, &b_jetJECUnc);
    fChain->SetBranchAddress("jetPartonID", jetPartonID, &b_jetPartonID);
    fChain->SetBranchAddress("jetGenJetIndex", jetGenJetIndex, &b_jetGenJetIndex);
    fChain->SetBranchAddress("jetGenJetEn", jetGenJetEn, &b_jetGenJetEn);

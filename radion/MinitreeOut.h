@@ -141,6 +141,7 @@ class MiniTree {
   float dijet_betaStar[2], dijet_rms[2];
 
   /// radion analysis variables
+  Long64_t radion_evtNum;
   TLorentzVector *radion_gamma1, *radion_gamma2;
   TClonesArray *radion_jets;
   TArrayF *radion_bJetTags;
@@ -306,6 +307,7 @@ void MiniTree::initEvent(void) {
     dijet_betaStar[i] = dijet_rms[i] = -999;
 
     /// radion selection variables
+    radion_evtNum = -1;
     radion_gamma1->SetXYZT(0, 0, 0, 0);
     radion_gamma2->SetXYZT(0, 0, 0, 0);
     radion_jets->Clear();
@@ -577,6 +579,7 @@ void MiniTree::createBranches(void) {
   mtree_muonTree->Branch("mvaGG"     , &mtree_mvaid      , "mvaGG/F"     ); 
   mtree_muonTree->Branch("catBaseGG" , &mtree_catBase    , "catBaseGG/I" ); 
 
+  mtree_radion->Branch("evtNum", &radion_evtNum);
   mtree_radion->Branch("gamma1", &radion_gamma1);
   mtree_radion->Branch("gamma2", &radion_gamma2);
   mtree_radion->Branch("jets", &radion_jets);

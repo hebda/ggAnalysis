@@ -617,6 +617,7 @@ int xAna::HggTreeWriteLoop(const char* filename, int ijob,
     // 2x. radion analysis
 
     // take the very same photon candidates as in the H->GG analysis above
+    _minitree->radion_evtNum = event;
     *(_minitree->radion_gamma1) = glead;
     *(_minitree->radion_gamma2) = gtrail;
 
