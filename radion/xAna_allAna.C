@@ -200,11 +200,11 @@ int xAna::HggTreeWriteLoop(const char* filename, int ijob,
     /// reset minitree variables
     _minitree->initEvent();
 
-    /// study mc truth block
-    //if( !isData ) {
-      //fillMCtruthInfo_HiggsSignal();//This line causes things to break in MC.
-      //_minitree->fillMCtrueOnly();
-    //}
+    // study mc truth block
+    if( !isData ) {
+      fillMCtruthInfo_HiggsSignal();
+      _minitree->fillMCtrueOnly();
+    }
 
     /// reco analysis
     unsigned icutlevel = 0;
