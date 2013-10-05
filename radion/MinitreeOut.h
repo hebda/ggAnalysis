@@ -213,10 +213,11 @@ void MiniTree::fill(void) {
   mtree_pit1 = mtree_ptg[0]/mtree_mass;
   mtree_pit2 = mtree_ptg[1]/mtree_mass;
 
-  mtree_mainTree->Fill();
-  if( mtree_fillLepTree && mtree_lepCat  == 0 ) mtree_elecTree->Fill();
-  if( mtree_fillLepTree && mtree_lepCat  == 1 ) mtree_muonTree->Fill();
-  if( mtree_fillDijetTree                     ) mtree_dijetTree->Fill();
+  //Do not fill useless trees to cut down on file size.
+  //mtree_mainTree->Fill();
+  //if( mtree_fillLepTree && mtree_lepCat  == 0 ) mtree_elecTree->Fill();
+  //if( mtree_fillLepTree && mtree_lepCat  == 1 ) mtree_muonTree->Fill();
+  //if( mtree_fillDijetTree                     ) mtree_dijetTree->Fill();
   
   mtree_radion->Fill();
 
@@ -537,8 +538,8 @@ void MiniTree::createBranches(void) {
   mtree_dijetTree->Branch("massResoEng", &mtree_massResoEng, "massResoEng/F");
   mtree_dijetTree->Branch("massResoRightVtx", &mtree_massResoRightVtx , "massResoRightVtx/F" );
   mtree_dijetTree->Branch("massResoRandVtx" , &mtree_massResoRandVtx, "massResoRandVtx/F" );
-  mtree_dijetTree->Branch("wei", &mc_wei, "wei/F");mtree_dijetTree->Branch("diphoMva" , &mtree_diphoMva, "diphoMva/F" );
-  // mtree_dijetTree->Branch("wei", &mc_wei, "wei/F");
+  mtree_dijetTree->Branch("diphoMva" , &mtree_diphoMva, "diphoMva/F" );
+  mtree_dijetTree->Branch("wei", &mc_wei, "wei/F");
   mtree_dijetTree->Branch("wPU", &mc_wPU, "wPU/F");
   mtree_dijetTree->Branch("wHQT", &mc_wHQT, "wHQT/F");
   mtree_dijetTree->Branch("wXsec", &mc_wXsec, "wXsec/F");
@@ -584,6 +585,7 @@ void MiniTree::createBranches(void) {
   mtree_radion->Branch("gamma2", &radion_gamma2);
   mtree_radion->Branch("jets", &radion_jets);
   mtree_radion->Branch("bJetTags", &radion_bJetTags);
+  mtree_radion->Branch("wei", &mc_wei);
 }
 
 
