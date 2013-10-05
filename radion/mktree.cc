@@ -52,7 +52,7 @@ Double_t minMassJJ = 0;
 Double_t maxMassJJ = 1e+10;
 
 Bool_t includeWeightVars = kTRUE;
-Bool_t doKinFit = kTRUE;
+Bool_t doKinFit =kFALSE;
 
 // correct TLorentzVectors of gamma+gamma and jet+jet by putting the Higgs mass
 // to its place
@@ -72,7 +72,7 @@ void mktree_one(const char* infile, const char* treename)
    if (wd) wd->cd();
 
    // variables for input tree
-   int evtNum;
+   Long64_t evtNum;
    float wei;
    TLorentzVector *gamma1, *gamma2;
    TClonesArray* jets;
@@ -161,20 +161,54 @@ void mktree_one(const char* infile, const char* treename)
       else
          bJetTagCategory = bJets.GetEntriesFast();
 
-      // take two jets with highest pt
+      // take two jets which give highest two-body pt
       TLorentzVector *jet1, *jet2;
+      TLorentzVector *tmpJet1, *tmpJet2;
+      float tmpHpt=-999;
+      int tmpIndex1=-1, tmpIndex2=-1;
 
       if (bJets.GetEntriesFast() >= 2) {
-         jet1 = (TLorentzVector*) bJets.At(0);
-         jet2 = (TLorentzVector*) bJets.At(1);
+	for(int itmp=0; itmp<bJets.GetEntriesFast(); ++itmp){
+	  for(int jtmp=itmp+1; jtmp<bJets.GetEntriesFast(); ++jtmp){
+	    tmpJet1 = (TLorentzVector*)bJets.At(itmp);
+	    tmpJet2 = (TLorentzVector*)bJets.At(jtmp);
+	    if(tmpHpt < ((TLorentzVector)(*tmpJet1+*tmpJet2)).M() ){
+	      tmpHpt = ((TLorentzVector)(*tmpJet1+*tmpJet2)).M();
+	      tmpIndex1=itmp;
+	      tmpIndex2=jtmp;
+	    }
+	  }
+	}
+	jet1 = (TLorentzVector*) bJets.At(tmpIndex1);
+	jet2 = (TLorentzVector*) bJets.At(tmpIndex2);
       }
       else if (bJets.GetEntriesFast() == 1) {
-         jet1 = (TLorentzVector*) bJets.At(0);
-         jet2 = (TLorentzVector*) otherJets.At(0);
+	tmpIndex1=0;
+	tmpJet1 = (TLorentzVector*)bJets.At(tmpIndex1);
+	for(int itmp=0; itmp<otherJets.GetEntriesFast(); ++itmp){
+	  tmpJet2 = (TLorentzVector*)otherJets.At(itmp);
+	    if(tmpHpt < ((TLorentzVector)(*tmpJet1+*tmpJet2)).M() ){
+	      tmpHpt = ((TLorentzVector)(*tmpJet1+*tmpJet2)).M();
+	      tmpIndex2=itmp;
+	    }	  
+	}
+	jet1 = (TLorentzVector*) bJets.At(tmpIndex1);
+	jet2 = (TLorentzVector*) otherJets.At(tmpIndex2);
       }
       else {
-         jet1 = (TLorentzVector*) otherJets.At(0);
-         jet2 = (TLorentzVector*) otherJets.At(1);
+	for(int itmp=0; itmp<otherJets.GetEntriesFast(); ++itmp){
+	  for(int jtmp=itmp+1; jtmp<otherJets.GetEntriesFast(); ++jtmp){
+	    tmpJet1 = (TLorentzVector*)otherJets.At(itmp);
+	    tmpJet2 = (TLorentzVector*)otherJets.At(jtmp);
+	    if(tmpHpt < ((TLorentzVector)(*tmpJet1+*tmpJet2)).M() ){
+	      tmpHpt = ((TLorentzVector)(*tmpJet1+*tmpJet2)).M();
+	      tmpIndex1=itmp;
+	      tmpIndex2=jtmp;
+	    }
+	  }
+	}
+	jet1 = (TLorentzVector*) otherJets.At(tmpIndex1);
+	jet2 = (TLorentzVector*) otherJets.At(tmpIndex2);
       }
 
       // apply kinematic fitter
