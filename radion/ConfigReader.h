@@ -130,7 +130,7 @@ class ConfigReader {
   float _diJetPtg1M,_diJetPtg2M,_diJetMjj;
 
   /// regression and control sample
-  int _doJetRegression, _doControlSample;
+  int _doJetRegression,_doControlSample;
 
 };
 

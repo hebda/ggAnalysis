@@ -167,26 +167,15 @@ void xAna::Setup_MVA( ) {
   //setup of MVA for b-jet energy regression
   if(doJetRegression==1){
     cout<<" Booking b-jet energy regression" << endl;
-    //jetRegres0->AddVariable( "hJet_pt", &jetRegPt);
-    jetRegres0->AddVariable( "hJet_eta", &jetRegEta);
-    jetRegres0->AddVariable( "hJet_cef", &jetRegCEF);
-    jetRegres0->AddVariable( "hJet_nconstituents", &jetRegNConstituents);
-    jetRegres0->AddVariable( "hJet_chf", &jetRegCHF);
-    //jetRegres0->AddVariable( "hJet_vtxPt", &jetRegVtxPt);
-    jetRegres0->AddVariable( "hJet_vtx3dL", &jetRegVtx3dL);
-    jetRegres0->AddVariable( "MET", &jetRegMET);
-    jetRegres0->AddVariable( "hJet_dPhiMETJet", &jetRegDPhiMETJet);
-    jetRegres0->BookMVA("BDTG method","jetRegressionWeights/TMVARegression_193_Cat0_BDTG.weights.xml");  
-    //jetRegres1->AddVariable( "hJet_pt", &jetRegPt);
-    jetRegres1->AddVariable( "hJet_eta", &jetRegEta);
-    jetRegres1->AddVariable( "hJet_cef", &jetRegCEF);
-    jetRegres1->AddVariable( "hJet_nconstituents", &jetRegNConstituents);
-    jetRegres1->AddVariable( "hJet_chf", &jetRegCHF);
-    //jetRegres1->AddVariable( "hJet_vtxPt", &jetRegVtxPt);
-    jetRegres1->AddVariable( "hJet_vtx3dL", &jetRegVtx3dL);
-    jetRegres1->AddVariable( "MET", &jetRegMET);
-    jetRegres1->AddVariable( "hJet_dPhiMETJet", &jetRegDPhiMETJet);
-    jetRegres1->BookMVA("BDTG method","jetRegressionWeights/TMVARegression_193_Cat1_BDTG.weights.xml");  
+    jetRegres->AddVariable( "jet_eta", &jetRegEta);
+    jetRegres->AddVariable( "jet_emfrac", &jetRegEta);
+    jetRegres->AddVariable( "jet_hadfrac", &jetRegEta);
+    jetRegres->AddVariable( "jet_nconstituents", &jetRegNConstituents);
+    jetRegres->AddVariable( "jet_vtx3dL", &jetRegVtx3dL);
+    jetRegres->AddVariable( "MET", &jetRegMET);
+    jetRegres->AddVariable( "jet_dPhiMETJet", &jetRegDPhiMETJet);
+    jetRegres->BookMVA("BDTG0","jetRegressionWeights/TMVARegression_Cat0_BDTG.weights.xml");  
+    jetRegres->BookMVA("BDTG1","jetRegressionWeights/TMVARegression_Cat1_BDTG.weights.xml");  
   }
   else if(doJetRegression==2){
     jetRegres->AddVariable( "jet_pt", &jetRegPt);
@@ -194,10 +183,9 @@ void xAna::Setup_MVA( ) {
     jetRegres->AddVariable( "jet_emfrac", &jetRegEMFrac);
     jetRegres->AddVariable( "jet_nConstituents", &jetRegNConstituents);
     jetRegres->AddVariable( "jet_hadfrac", &jetRegHadFrac);
-    jetRegres->AddVariable( "jet_secVtxPt", &jetRegVtxPt);
     jetRegres->AddVariable( "jet_secVtx3dL", &jetRegVtx3dL);
-    jetRegres->AddVariable( "ev_met_corr_pfmet", &jetRegMETcorr);
-    jetRegres->AddVariable( "jet_dPhiMet", &jetRegDPhiMETJetcorr);
+    jetRegres->AddVariable( "ev_met_corr_pfmet", &jetRegMET);
+    jetRegres->AddVariable( "jet_dPhiMet", &jetRegDPhiMETJet);
     jetRegres->BookMVA("BDT", "jetRegressionWeights/TMVARegression_BDT_Olivier.weights.xml");
   }
   //end of setup for b-jet energy regression
@@ -321,22 +309,16 @@ float xAna::JetRegression(int iJet){
 
   jetRegPt = jetPt[iJet];
   jetRegEta = jetEta[iJet];
-  jetRegCEF = jetCEF[iJet];
-  jetRegNConstituents = jetNConstituents[iJet];
-  jetRegCHF = jetCHF[iJet];
-  jetRegVtxPt = jetVtxPt[iJet];
-  jetRegVtx3dL = jetVtx3dL[iJet];
-  jetRegMET = pfMET;
-  jetRegDPhiMETJet = jetDPhiMETJet[iJet];
-
-  jetRegEMFrac = jetCEF[iJet]+jetNEF[iJet];
+  jetRegEMFrac = jetCEF[iJet]+jetNEF[iJet]+jetMEF[iJet];
   jetRegHadFrac = jetCHF[iJet]+jetNHF[iJet];
-  jetRegMETcorr = recoPfMET;
-  jetRegDPhiMETJetcorr = deltaPhi(recoPfMETPhi, jetPhi[iJet]);
+  jetRegNConstituents = jetNConstituents[iJet];
+  jetRegVtx3dL = jetVtx3dL[iJet];
+  jetRegMET = recoPfMET;
+  jetRegDPhiMETJet = deltaPhi(recoPfMETPhi, jetPhi[iJet]);
   
   if(doJetRegression==1){
-    if(jetPt[iJet]<80) return jetPt[iJet]*jetRegres0->EvaluateRegression("BDTG method")[0];
-    if(jetPt[iJet]>80) return jetPt[iJet]*jetRegres1->EvaluateRegression("BDTG method")[0];
+    if(jetPt[iJet]<80) return jetPt[iJet]*jetRegres->EvaluateRegression("BDTG0")[0];
+    if(jetPt[iJet]>80) return jetPt[iJet]*jetRegres->EvaluateRegression("BDTG1")[0];
   }
   else if(doJetRegression==2)
     return (float)(jetRegres->EvaluateMVA("BDT"));

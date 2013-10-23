@@ -321,8 +321,9 @@ public :
    vector<float> DiscriVBF_gluglu_cat; /// not used for now
 
    int doJetRegression;//0 for no regression, 1 for Phil's regression, 2 for Olivier's regression, set in config
+   int doRegressionTraining;//0 for normal analysis flow, 1 for preparing regression training tree
    int doControlSample;//0 for normal analysis, 1 for control sample (invert 1 photon ID)
-   TMVA::Reader *jetRegres, *jetRegres0, *jetRegres1;
+   TMVA::Reader *jetRegres;
 
    float sumTrackPtInCone(int,int,float,float,float,float,float,float);
    float worstSumTrackPtInCone(int,int&,float,float,float,float,float,float);
@@ -740,10 +741,17 @@ public :
    Float_t         jetNHF[470];   //[nJet]
    Float_t         jetCEF[470];   //[nJet]
    Float_t         jetNEF[470];   //[nJet]
+   Float_t         jetMEF[470];   //[nJet]
    Int_t           jetNCH[470];   //[nJet]
    Float_t         jetHFHAE[470];   //[nJet]
    Float_t         jetHFEME[470];   //[nJet]
    Int_t           jetNConstituents[470];   //[nJet]
+   Float_t         jetLeadTrackPt[470];   //[nJet]
+   Float_t         jetSoftLeptPt[470];   //[nJet]
+   Float_t         jetSoftLeptPtRel[470];   //[nJet]
+   Float_t         jetSoftLeptdR[470];   //[nJet]
+   Float_t         jetVtx3deL[470];   //[nJet]
+   Float_t         jetVtxMass[470];   //[nJet]
    Float_t         jetTrackCountHiEffBJetTags[470];   //[nJet]
    Float_t         jetTrackCountHiPurBJetTags[470];   //[nJet]
    Float_t         jetSimpleSVHiEffBJetTags[470];   //[nJet]
@@ -769,7 +777,7 @@ public :
    Float_t         jetVtx3dL[470];
    Float_t         jetDPhiMETJet[470];
    //vars for regression reader:
-   Float_t jetRegPt, jetRegEta, jetRegCEF, jetRegNConstituents, jetRegCHF, jetRegVtxPt, jetRegVtx3dL, jetRegMET, jetRegDPhiMETJet, jetRegEMFrac, jetRegHadFrac, jetRegMETcorr, jetRegDPhiMETJetcorr;
+   Float_t jetRegPt, jetRegEta, jetRegEMFrac, jetRegHadFrac, jetRegNConstituents, jetRegVtx3dL, jetRegMET, jetRegDPhiMETJet;
 
    /// Variables for PU Jet ID
    Float_t         jetMVAs[500][4]; // [4] -> [3] for new ntuples before May30
@@ -1285,10 +1293,17 @@ public :
    TBranch        *b_jetNHF;   //!
    TBranch        *b_jetCEF;   //!
    TBranch        *b_jetNEF;   //!
+   TBranch        *b_jetMEF;   //!
    TBranch        *b_jetNCH;   //!
    TBranch        *b_jetHFHAE;   //!
    TBranch        *b_jetHFEME;   //!
    TBranch        *b_jetNConstituents;   //!
+   TBranch        *b_jetLeadTrackPt;   //!
+   TBranch        *b_jetSoftLeptPt;   //!
+   TBranch        *b_jetSoftLeptPtRel;   //!
+   TBranch        *b_jetSoftLeptdR;   //!
+   TBranch        *b_jetVtx3deL;   //!
+   TBranch        *b_jetVtxMass;   //!
    TBranch        *b_jetTrackCountHiEffBJetTags;   //!
    TBranch        *b_jetTrackCountHiPurBJetTags;   //!
    TBranch        *b_jetSimpleSVHiEffBJetTags;   //!
@@ -2519,10 +2534,17 @@ void xAna::Init(TTree *tree) {
    fChain->SetBranchAddress("jetNHF", jetNHF, &b_jetNHF);
    fChain->SetBranchAddress("jetCEF", jetCEF, &b_jetCEF);
    fChain->SetBranchAddress("jetNEF", jetNEF, &b_jetNEF);
+   fChain->SetBranchAddress("jetMEF", jetMEF, &b_jetMEF);
    fChain->SetBranchAddress("jetNCH", jetNCH, &b_jetNCH);
    fChain->SetBranchAddress("jetHFHAE", jetHFHAE, &b_jetHFHAE);
    fChain->SetBranchAddress("jetHFEME", jetHFEME, &b_jetHFEME);
    fChain->SetBranchAddress("jetNConstituents", jetNConstituents, &b_jetNConstituents);
+   fChain->SetBranchAddress("jetLeadTrackPt", jetLeadTrackPt, &b_jetLeadTrackPt);
+   fChain->SetBranchAddress("jetSoftLeptPt", jetSoftLeptPt, &b_jetSoftLeptPt);
+   fChain->SetBranchAddress("jetSoftLeptPtRel", jetSoftLeptPtRel, &b_jetSoftLeptPtRel);
+   fChain->SetBranchAddress("jetSoftLeptdR", jetSoftLeptdR, &b_jetSoftLeptdR);
+   fChain->SetBranchAddress("jetVtx3deL", jetVtx3deL, &b_jetVtx3deL);
+   fChain->SetBranchAddress("jetVtxMass", jetVtxMass, &b_jetVtxMass);
    fChain->SetBranchAddress("jetTrackCountHiEffBJetTags", jetTrackCountHiEffBJetTags, &b_jetTrackCountHiEffBJetTags);
    fChain->SetBranchAddress("jetTrackCountHiPurBJetTags", jetTrackCountHiPurBJetTags, &b_jetTrackCountHiPurBJetTags);
    fChain->SetBranchAddress("jetSimpleSVHiEffBJetTags", jetSimpleSVHiEffBJetTags, &b_jetSimpleSVHiEffBJetTags);

@@ -96,11 +96,7 @@ int xAna::HggTreeWriteLoop(const char* filename, int ijob,
   phoID_2012[1] = new TMVA::Reader("!Color:Silent");
   DiscriDiPho_2011 = new TMVA::Reader("!Color:Silent");
   DiscriDiPho_2012 = new TMVA::Reader("!Color:Silent");
-  if(doJetRegression==1) {
-    jetRegres0 = new TMVA::Reader("!Color:Silent");
-    jetRegres1 = new TMVA::Reader("!Color:Silent");
-  }
-  else if(doJetRegression==2) jetRegres = new TMVA::Reader("!Color:Silent");
+  if(doJetRegression!=0) jetRegres = new TMVA::Reader("!Color:Silent");
   Setup_MVA();
   
   if( _config->setup() == "ReReco2011" )  for( int i = 0 ; i < 2; i++ ) phoID_mva[i] = phoID_2011[i];
@@ -586,7 +582,7 @@ int xAna::HggTreeWriteLoop(const char* filename, int ijob,
       // if( lepCat == 1 ) fillElecTagVariables(lepTag,glead,gtrail,muonIndex[0],selVtx);
     }
 
-    // 3. met tag (For one flavor of jet energy regression, MET needs to be corrected first.)
+    // 3. met tag (For the jet energy regression, MET needs to be corrected first.)
     _minitree->mtree_rawMet    = recoPfMET;
     _minitree->mtree_rawMetPhi = recoPfMETPhi;
     //    if( !isData ) {
@@ -623,12 +619,60 @@ int xAna::HggTreeWriteLoop(const char* filename, int ijob,
 
     vector<int> goodJetsIndexRadion = selectJetsRadion(nVtxJetID, selVtx);
     _minitree->radion_bJetTags->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_genJetPt        ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_eta             ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_cef		  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_nef		  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_mef		  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_nconstituents	  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_chf		  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_JECUnc	  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_ptLeadTrack	  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_vtxPt		  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_vtx3dL	  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_SoftLeptPtCut	  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_dPhiMETJet	  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_nch		  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_vtx3deL	  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_vtxMass	  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_ptRaw		  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_EnRaw		  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_SoftLeptptRelCut->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_SoftLeptdRCut	  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_partonID	  ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_jet_dRJetGenJet         ->Set(goodJetsIndexRadion.size());
+    _minitree->radion_MET = recoPfMET;
+    _minitree->radion_rho25 = rho25;
 
     for (unsigned i = 0; i < goodJetsIndexRadion.size(); i++) {
       int iJet = goodJetsIndexRadion[i];
 
       //_minitree->radion_bJetTags->AddAt(jetCombinedSecondaryVtxMVABJetTags[iJet], i);
       _minitree->radion_bJetTags->AddAt(jetCombinedSecondaryVtxBJetTags[iJet], i);
+      _minitree->radion_jet_genJetPt         ->AddAt(jetGenJetPt[iJet], i);
+      _minitree->radion_jet_eta              ->AddAt(jetEta[iJet], i);
+      _minitree->radion_jet_cef		     ->AddAt(jetCEF[iJet], i);
+      _minitree->radion_jet_nef		     ->AddAt(jetNEF[iJet], i);
+      _minitree->radion_jet_mef		     ->AddAt(jetMEF[iJet], i);
+      _minitree->radion_jet_nconstituents    ->AddAt(jetNConstituents[iJet], i);
+      _minitree->radion_jet_chf		     ->AddAt(jetCHF[iJet], i);
+      _minitree->radion_jet_JECUnc	     ->AddAt(jetJECUnc[iJet], i);
+      _minitree->radion_jet_ptLeadTrack	     ->AddAt(jetLeadTrackPt[iJet], i);
+      _minitree->radion_jet_vtxPt	     ->AddAt(jetVtxPt[iJet], i);
+      _minitree->radion_jet_vtx3dL	     ->AddAt(jetVtx3dL[iJet], i);
+      _minitree->radion_jet_SoftLeptPtCut    ->AddAt(jetSoftLeptPt[iJet], i);
+      _minitree->radion_jet_nch		     ->AddAt(jetNCH[iJet], i);
+      _minitree->radion_jet_vtx3deL	     ->AddAt(jetVtx3deL[iJet], i);
+      _minitree->radion_jet_vtxMass	     ->AddAt(jetVtxMass[iJet], i);
+      _minitree->radion_jet_ptRaw	     ->AddAt(jetRawPt[iJet], i);
+      _minitree->radion_jet_EnRaw	     ->AddAt(jetRawEn[iJet], i);
+      _minitree->radion_jet_SoftLeptptRelCut ->AddAt(jetSoftLeptPtRel[iJet], i);
+      _minitree->radion_jet_SoftLeptdRCut    ->AddAt(jetSoftLeptdR[iJet], i);
+      _minitree->radion_jet_partonID	     ->AddAt(jetPartonID[iJet], i);
+      _minitree->radion_jet_dRJetGenJet      ->AddAt(sqrt(pow(jetEta[iJet]-jetGenEta[iJet],2)+pow(jetPhi[iJet]-jetGenPhi[iJet],2)), i);
+      float tmpPi = 3.1415927, tmpDPhi=fabs(jetPhi[iJet]-recoPfMETPhi);
+      if(tmpDPhi>tmpPi) tmpDPhi=2*tmpPi-tmpDPhi;
+      _minitree->radion_jet_dPhiMETJet	     ->AddAt(tmpDPhi, i);
 
       TLorentzVector* jet = new((*(_minitree->radion_jets))[_minitree->radion_jets->GetEntriesFast()]) TLorentzVector();
       jet->SetPtEtaPhiE(jetPt[iJet], jetEta[iJet], jetPhi[iJet], jetEn[iJet]);

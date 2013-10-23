@@ -151,12 +151,12 @@ CrossSection FindXsec( string inputfile, int enLHC  ) {
     if( inputfile.find("madgraph_ggF_012jet")   != string::npos ) { xsec = 75.4; mode = 10004;} 
   }
 
-  if( inputfile.find("hgg")   != string::npos ) sigType = "ggh";
   if( inputfile.find("ggH")   != string::npos ) sigType = "ggh";
   if( inputfile.find("VBFH")  != string::npos ) sigType = "vbf";
   if( inputfile.find("VBF_")  != string::npos ) sigType = "vbf_";
   if( inputfile.find("WH_ZH") != string::npos ) sigType = "vh";
   if( inputfile.find("TTH")   != string::npos ) sigType = "tth";
+  if( inputfile.find("Photon_Run")   != string::npos ) sigType = "data";
 
   if( sigType != "background" ) {
     SMHiggsCrossSection SMhiggs_xsec; 

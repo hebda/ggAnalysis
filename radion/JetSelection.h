@@ -179,7 +179,7 @@ vector<int> xAna::selectJetsRadion(Int_t nvtx, Int_t selVtx) {
 
   // jet loop
   for(int i = 0; i < nJet; i++) {
-    if (jetPt[i] < 25) continue;
+    if (jetPt[i] < 20) continue;
 
     // 2011
     if( nvtx <= 0 ) {

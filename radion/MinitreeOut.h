@@ -146,6 +146,31 @@ class MiniTree {
   TClonesArray *radion_jets;
   TArrayF *radion_bJetTags;
 
+  TArrayF *radion_jet_genJetPt;
+  TArrayF *radion_jet_eta;
+  TArrayF *radion_jet_cef;
+  TArrayF *radion_jet_nef;
+  TArrayF *radion_jet_mef;
+  TArrayF *radion_jet_nconstituents;
+  TArrayF *radion_jet_chf;
+  TArrayF *radion_jet_JECUnc;
+  TArrayF *radion_jet_ptLeadTrack;
+  TArrayF *radion_jet_vtxPt;
+  TArrayF *radion_jet_vtx3dL;
+  TArrayF *radion_jet_SoftLeptPtCut;
+  float    radion_MET;
+  TArrayF *radion_jet_dPhiMETJet;
+  TArrayF *radion_jet_nch;
+  TArrayF *radion_jet_vtx3deL;
+  TArrayF *radion_jet_vtxMass;
+  TArrayF *radion_jet_ptRaw;
+  TArrayF *radion_jet_EnRaw;
+  TArrayF *radion_jet_SoftLeptptRelCut;
+  TArrayF *radion_jet_SoftLeptdRCut;
+  float    radion_rho25;
+  TArrayF *radion_jet_partonID;
+  TArrayF *radion_jet_dRJetGenJet;
+
   /// vector to do synchronisation printout
   vector<string> sync_iName, sync_lName,sync_fName, sync_mtreeName;
   vector<int*> sync_iVal;
@@ -162,11 +187,55 @@ MiniTree::MiniTree( const char * filenames, bool read ) {
   radion_gamma2 = new TLorentzVector;
   radion_jets = new TClonesArray("TLorentzVector");
   radion_bJetTags = new TArrayF;
+  radion_jet_genJetPt          = new TArrayF;
+  radion_jet_eta               = new TArrayF;
+  radion_jet_cef	       = new TArrayF;
+  radion_jet_nef	       = new TArrayF;
+  radion_jet_mef	       = new TArrayF;
+  radion_jet_nconstituents     = new TArrayF;
+  radion_jet_chf	       = new TArrayF;
+  radion_jet_JECUnc	       = new TArrayF;
+  radion_jet_ptLeadTrack       = new TArrayF;
+  radion_jet_vtxPt	       = new TArrayF;
+  radion_jet_vtx3dL	       = new TArrayF;
+  radion_jet_SoftLeptPtCut     = new TArrayF;
+  radion_jet_dPhiMETJet	       = new TArrayF;
+  radion_jet_nch	       = new TArrayF;
+  radion_jet_vtx3deL	       = new TArrayF;
+  radion_jet_vtxMass	       = new TArrayF;
+  radion_jet_ptRaw	       = new TArrayF;
+  radion_jet_EnRaw	       = new TArrayF;
+  radion_jet_SoftLeptptRelCut  = new TArrayF;
+  radion_jet_SoftLeptdRCut     = new TArrayF;
+  radion_jet_partonID          = new TArrayF;
+  radion_jet_dRJetGenJet           = new TArrayF;
 
   radion_gamma1->Class()->IgnoreTObjectStreamer();
   radion_gamma2->Class()->IgnoreTObjectStreamer();
   radion_jets->Class()->IgnoreTObjectStreamer();
   radion_bJetTags->Class()->IgnoreTObjectStreamer();
+  radion_jet_genJetPt          ->Class()->IgnoreTObjectStreamer();
+  radion_jet_eta               ->Class()->IgnoreTObjectStreamer();
+  radion_jet_cef	       ->Class()->IgnoreTObjectStreamer();
+  radion_jet_nef	       ->Class()->IgnoreTObjectStreamer();
+  radion_jet_mef	       ->Class()->IgnoreTObjectStreamer();
+  radion_jet_nconstituents     ->Class()->IgnoreTObjectStreamer();
+  radion_jet_chf	       ->Class()->IgnoreTObjectStreamer();
+  radion_jet_JECUnc	       ->Class()->IgnoreTObjectStreamer();
+  radion_jet_ptLeadTrack       ->Class()->IgnoreTObjectStreamer();
+  radion_jet_vtxPt	       ->Class()->IgnoreTObjectStreamer();
+  radion_jet_vtx3dL	       ->Class()->IgnoreTObjectStreamer();
+  radion_jet_SoftLeptPtCut     ->Class()->IgnoreTObjectStreamer();
+  radion_jet_dPhiMETJet	       ->Class()->IgnoreTObjectStreamer();
+  radion_jet_nch	       ->Class()->IgnoreTObjectStreamer();
+  radion_jet_vtx3deL	       ->Class()->IgnoreTObjectStreamer();
+  radion_jet_vtxMass	       ->Class()->IgnoreTObjectStreamer();
+  radion_jet_ptRaw	       ->Class()->IgnoreTObjectStreamer();
+  radion_jet_EnRaw	       ->Class()->IgnoreTObjectStreamer();
+  radion_jet_SoftLeptptRelCut  ->Class()->IgnoreTObjectStreamer();
+  radion_jet_SoftLeptdRCut     ->Class()->IgnoreTObjectStreamer();
+  radion_jet_partonID          ->Class()->IgnoreTObjectStreamer();
+  radion_jet_dRJetGenJet           ->Class()->IgnoreTObjectStreamer();
 
   addSyncVariables = true;
   
@@ -313,6 +382,30 @@ void MiniTree::initEvent(void) {
     radion_gamma2->SetXYZT(0, 0, 0, 0);
     radion_jets->Clear();
     radion_bJetTags->Set(0);
+    radion_jet_genJetPt        ->Set(0);
+    radion_jet_eta             ->Set(0);
+    radion_jet_cef	       ->Set(0);
+    radion_jet_nef	       ->Set(0);
+    radion_jet_mef	       ->Set(0);
+    radion_jet_nconstituents   ->Set(0);
+    radion_jet_chf	       ->Set(0);
+    radion_jet_JECUnc	       ->Set(0);
+    radion_jet_ptLeadTrack     ->Set(0);
+    radion_jet_vtxPt	       ->Set(0);
+    radion_jet_vtx3dL	       ->Set(0);
+    radion_jet_SoftLeptPtCut   ->Set(0);
+    radion_jet_dPhiMETJet      ->Set(0);
+    radion_jet_nch	       ->Set(0);
+    radion_jet_vtx3deL	       ->Set(0);
+    radion_jet_vtxMass	       ->Set(0);
+    radion_jet_ptRaw	       ->Set(0);
+    radion_jet_EnRaw	       ->Set(0);
+    radion_jet_SoftLeptptRelCut->Set(0);
+    radion_jet_SoftLeptdRCut   ->Set(0);
+    radion_jet_partonID        ->Set(0);
+    radion_jet_dRJetGenJet         ->Set(0);
+    radion_MET = 0;
+    radion_rho25 = 0;
 
     if( addSyncVariables ) {
       convInd[i] = convNtk[i] = convValidVtx[i] = -999;
@@ -347,6 +440,29 @@ MiniTree::~MiniTree(void) {
   delete radion_gamma2;
   delete radion_jets;
   delete radion_bJetTags;
+  delete radion_jet_genJetPt;
+  delete radion_jet_eta             ;
+  delete radion_jet_cef	       ;
+  delete radion_jet_nef	       ;
+  delete radion_jet_mef	       ;
+  delete radion_jet_nconstituents   ;
+  delete radion_jet_chf	       ;
+  delete radion_jet_JECUnc	       ;
+  delete radion_jet_ptLeadTrack     ;
+  delete radion_jet_vtxPt	       ;
+  delete radion_jet_vtx3dL	       ;
+  delete radion_jet_SoftLeptPtCut   ;
+  delete radion_jet_dPhiMETJet      ;
+  delete radion_jet_nch	       ;
+  delete radion_jet_vtx3deL	       ;
+  delete radion_jet_vtxMass	       ;
+  delete radion_jet_ptRaw	       ;
+  delete radion_jet_EnRaw	       ;
+  delete radion_jet_SoftLeptptRelCut;
+  delete radion_jet_SoftLeptdRCut   ;
+  delete radion_jet_partonID        ;
+  delete radion_jet_dRJetGenJet         ;
+
 }
 
 
@@ -586,6 +702,32 @@ void MiniTree::createBranches(void) {
   mtree_radion->Branch("jets", &radion_jets);
   mtree_radion->Branch("bJetTags", &radion_bJetTags);
   mtree_radion->Branch("wei", &mc_wei);
+
+  mtree_radion->Branch("jet_genJetPt",        &radion_jet_genJetPt);
+  mtree_radion->Branch("jet_eta",	      &radion_jet_eta);		     
+  mtree_radion->Branch("jet_cef",	      &radion_jet_cef);		     
+  mtree_radion->Branch("jet_nef",	      &radion_jet_nef);		     
+  mtree_radion->Branch("jet_mef",	      &radion_jet_mef);		     
+  mtree_radion->Branch("jet_nconstituents",   &radion_jet_nconstituents);     
+  mtree_radion->Branch("jet_chf",	      &radion_jet_chf);		     
+  mtree_radion->Branch("jet_JECUnc",	      &radion_jet_JECUnc);	     
+  mtree_radion->Branch("jet_ptLeadTrack",     &radion_jet_ptLeadTrack);	     
+  mtree_radion->Branch("jet_vtxPt",	      &radion_jet_vtxPt);	     
+  mtree_radion->Branch("jet_vtx3dL",          &radion_jet_vtx3dL);	     
+  mtree_radion->Branch("jet_SoftLeptPtCut",   &radion_jet_SoftLeptPtCut);     
+  mtree_radion->Branch("MET",		      &radion_MET);		     
+  mtree_radion->Branch("jet_dPhiMETJet",      &radion_jet_dPhiMETJet);	     
+  mtree_radion->Branch("jet_nch",	      &radion_jet_nch);		     
+  mtree_radion->Branch("jet_vtx3deL",	      &radion_jet_vtx3deL);	     
+  mtree_radion->Branch("jet_vtxMass",	      &radion_jet_vtxMass);	     
+  mtree_radion->Branch("jet_ptRaw",	      &radion_jet_ptRaw);	     
+  mtree_radion->Branch("jet_EnRaw",	      &radion_jet_EnRaw);	     
+  mtree_radion->Branch("jet_SoftLeptptRelCut",&radion_jet_SoftLeptptRelCut);  
+  mtree_radion->Branch("jet_SoftLeptdRCut",   &radion_jet_SoftLeptdRCut);     
+  mtree_radion->Branch("rho25",		      &radion_rho25);		     
+  mtree_radion->Branch("jet_partonID",        &radion_jet_partonID);
+  mtree_radion->Branch("jet_dRJetGenJet",         &radion_jet_dRJetGenJet);
+
 }
 
 

@@ -53,13 +53,18 @@ Double_t maxMassJJ = 1e+10;
 
 Bool_t includeWeightVars = kTRUE;
 Bool_t doKinFit =kFALSE;
+Bool_t includeTrainingVars = kFALSE;
 
-// correct TLorentzVectors of gamma+gamma and jet+jet by putting the Higgs mass
-// to its place
-Bool_t correctHiggsMass = kFALSE;
+//method for TArray class
+void RemoveElement(TArrayF *arr, int index){
+  for(int j=index+1; j<arr->GetSize(); ++j){
+    arr->SetAt(arr->GetAt(j),j-1);
+  }
+  arr->Set(arr->GetSize()-1);
+}
 
 //______________________________________________________________________________
-void mktree_one(const char* infile, const char* treename)
+void mktree_one(const char* infile, const char* treename, int eventCut)
 {
    // current working directory
    TDirectory* wd = gDirectory;
@@ -77,10 +82,58 @@ void mktree_one(const char* infile, const char* treename)
    TLorentzVector *gamma1, *gamma2;
    TClonesArray* jets;
    TArrayF* bJetTags;
+   TArrayF *jet_genJetPt;
+   TArrayF *jet_eta;		   
+   TArrayF *jet_cef;		   
+   TArrayF *jet_nef;		   
+   TArrayF *jet_mef;		   
+   TArrayF *jet_nconstituents;	   
+   TArrayF *jet_chf;		   
+   TArrayF *jet_JECUnc;		   
+   TArrayF *jet_ptLeadTrack;	   
+   TArrayF *jet_vtxPt;		   
+   TArrayF *jet_vtx3dL;		   
+   TArrayF *jet_SoftLeptPtCut;	   
+   float    MET;		   
+   TArrayF *jet_dPhiMETJet;	   
+   TArrayF *jet_nch;		   
+   TArrayF *jet_vtx3deL;	   
+   TArrayF *jet_vtxMass;	   
+   TArrayF *jet_ptRaw;		   
+   TArrayF *jet_EnRaw;		   
+   TArrayF *jet_SoftLeptptRelCut;  
+   TArrayF *jet_SoftLeptdRCut;	   
+   float    rho25;		   
+   TArrayF *jet_partonID;	   
+   TArrayF *jet_dRJetGenJet;           
+
+   float ijet_genJetPt,ijet_pt,ijet_eta,ijet_phi,ijet_En,ijet_cef,ijet_nef,ijet_mef,ijet_emfrac,ijet_hadfrac,ijet_nconstituents,ijet_chf,ijet_JECUnc,ijet_ptLeadTrack,ijet_vtxPt,ijet_vtx3dL,ijet_SoftLeptPtCut,ijet_dPhiMETJet,ijet_nch,ijet_vtx3deL,ijet_vtxMass,ijet_ptRaw,ijet_EnRaw,ijet_SoftLeptptRelCut,ijet_SoftLeptdRCut,ijet_partonID,ijet_dRJetGenJet;
 
    gamma1 = gamma2 = NULL;
    jets = NULL;
    bJetTags = NULL;
+   jet_genJetPt = NULL;
+   jet_eta = NULL;
+   jet_cef = NULL;
+   jet_nef = NULL;
+   jet_mef = NULL;
+   jet_nconstituents = NULL;
+   jet_chf = NULL;
+   jet_JECUnc = NULL;
+   jet_ptLeadTrack = NULL;
+   jet_vtxPt = NULL;
+   jet_vtx3dL = NULL;
+   jet_SoftLeptPtCut = NULL;
+   jet_dPhiMETJet = NULL;
+   jet_nch = NULL;
+   jet_vtx3deL = NULL;
+   jet_vtxMass = NULL;
+   jet_ptRaw = NULL;
+   jet_EnRaw = NULL;
+   jet_SoftLeptptRelCut = NULL;
+   jet_SoftLeptdRCut = NULL;
+   jet_partonID = NULL;
+   jet_dRJetGenJet = NULL;
 
    // associate input tree branches with variables
    tree->SetBranchAddress("evtNum", &evtNum);
@@ -89,6 +142,30 @@ void mktree_one(const char* infile, const char* treename)
    tree->SetBranchAddress("gamma2", &gamma2);
    tree->SetBranchAddress("jets", &jets);
    tree->SetBranchAddress(bJetTagsBranchName, &bJetTags);
+   tree->SetBranchAddress("jet_genJetPt",        &jet_genJetPt          );
+   tree->SetBranchAddress("jet_eta",		 &jet_eta		);     
+   tree->SetBranchAddress("jet_cef",		 &jet_cef		);     
+   tree->SetBranchAddress("jet_nef",		 &jet_nef		);     
+   tree->SetBranchAddress("jet_mef",		 &jet_mef		);     
+   tree->SetBranchAddress("jet_nconstituents",	 &jet_nconstituents	);     
+   tree->SetBranchAddress("jet_chf",		 &jet_chf		);     
+   tree->SetBranchAddress("jet_JECUnc",		 &jet_JECUnc		);     
+   tree->SetBranchAddress("jet_ptLeadTrack",	 &jet_ptLeadTrack	);     
+   tree->SetBranchAddress("jet_vtxPt",		 &jet_vtxPt		);     
+   tree->SetBranchAddress("jet_vtx3dL",		 &jet_vtx3dL		);     
+   tree->SetBranchAddress("jet_SoftLeptPtCut",	 &jet_SoftLeptPtCut	);     
+   tree->SetBranchAddress("MET",		 &MET		   	);
+   tree->SetBranchAddress("jet_dPhiMETJet",	 &jet_dPhiMETJet	);     
+   tree->SetBranchAddress("jet_nch",		 &jet_nch		);     
+   tree->SetBranchAddress("jet_vtx3deL",	 &jet_vtx3deL	   	);
+   tree->SetBranchAddress("jet_vtxMass",	 &jet_vtxMass	   	);
+   tree->SetBranchAddress("jet_ptRaw",		 &jet_ptRaw		);     
+   tree->SetBranchAddress("jet_EnRaw",		 &jet_EnRaw		);     
+   tree->SetBranchAddress("jet_SoftLeptptRelCut",&jet_SoftLeptptRelCut  );
+   tree->SetBranchAddress("jet_SoftLeptdRCut",	 &jet_SoftLeptdRCut	);     
+   tree->SetBranchAddress("rho25",		 &rho25		     	);
+   tree->SetBranchAddress("jet_partonID",	 &jet_partonID	   	);
+   tree->SetBranchAddress("jet_dRJetGenJet",         &jet_dRJetGenJet           );
 
    // create output tree
    TTree* treeOut = new TTree(treename, "Radion tree");
@@ -102,23 +179,104 @@ void mktree_one(const char* infile, const char* treename)
    // associate output tree branches with variables
    treeOut->Branch("evtNum", &evtNum);
    treeOut->Branch("wei", &wei2);
-   treeOut->Branch("mGG", &mGG);
-   treeOut->Branch("mJJ", &mJJ);
-   treeOut->Branch("mRad", &mRad);
-   treeOut->Branch("ptRad", &ptRad);
-   if(includeWeightVars){
-     treeOut->Branch("ptG1", &ptG1);
-     treeOut->Branch("ptG2", &ptG2);
+   if(includeTrainingVars){
+     treeOut->Branch("jet_genJetPt",     &ijet_genJetPt          );
+     treeOut->Branch("jet_pt",           &ijet_pt                );
+     treeOut->Branch("jet_eta",		 &ijet_eta		);     
+     treeOut->Branch("jet_phi",		 &ijet_phi		);     
+     treeOut->Branch("jet_En",		 &ijet_En		);     
+     treeOut->Branch("jet_cef",		 &ijet_cef		);     
+     treeOut->Branch("jet_nef",		 &ijet_nef		);     
+     treeOut->Branch("jet_mef",		 &ijet_mef		);     
+     treeOut->Branch("jet_emfrac",	 &ijet_emfrac		);     
+     treeOut->Branch("jet_hadfrac",	 &ijet_hadfrac		);     
+     treeOut->Branch("jet_nconstituents",&ijet_nconstituents	);     
+     treeOut->Branch("jet_chf",		 &ijet_chf		);     
+     treeOut->Branch("jet_JECUnc",	 &ijet_JECUnc		);     
+     treeOut->Branch("jet_ptLeadTrack",	 &ijet_ptLeadTrack	);     
+     treeOut->Branch("jet_vtxPt",	 &ijet_vtxPt		);     
+     treeOut->Branch("jet_vtx3dL",	 &ijet_vtx3dL		);     
+     treeOut->Branch("jet_SoftLeptPtCut",&ijet_SoftLeptPtCut	);     
+     treeOut->Branch("MET",		 &MET		   	);
+     treeOut->Branch("jet_dPhiMETJet",	 &ijet_dPhiMETJet	);     
+     treeOut->Branch("jet_nch",		 &ijet_nch		);     
+     treeOut->Branch("jet_vtx3deL",	 &ijet_vtx3deL	   	);
+     treeOut->Branch("jet_vtxMass",	 &ijet_vtxMass	   	);
+     treeOut->Branch("jet_ptRaw",	 &ijet_ptRaw		);     
+     treeOut->Branch("jet_EnRaw",	 &ijet_EnRaw		);     
+     treeOut->Branch("jet_SoftLeptptRelCut",&ijet_SoftLeptptRelCut  );
+     treeOut->Branch("jet_SoftLeptdRCut",&ijet_SoftLeptdRCut	);     
+     treeOut->Branch("rho25",		 &rho25		     	);
+     treeOut->Branch("jet_partonID",	 &ijet_partonID	   	);
+     treeOut->Branch("jet_dRJetGenJet",  &ijet_dRJetGenJet      );
    }
-   treeOut->Branch("deltaRGJ", &deltaRGJ);
-   treeOut->Branch("deltaRGG", &deltaRGG);
-   treeOut->Branch("bJetTagCategory", &bJetTagCategory);
+   else{
+     treeOut->Branch("mGG", &mGG);
+     treeOut->Branch("mJJ", &mJJ);
+     treeOut->Branch("mRad", &mRad);
+     treeOut->Branch("ptRad", &ptRad);
+     if(includeWeightVars){
+       treeOut->Branch("ptG1", &ptG1);
+       treeOut->Branch("ptG2", &ptG2);
+     }
+     treeOut->Branch("deltaRGJ", &deltaRGJ);
+     treeOut->Branch("deltaRGG", &deltaRGG);
+     treeOut->Branch("bJetTagCategory", &bJetTagCategory);
+   }
 
    // event loop
    for (Int_t i = 0; i < tree->GetEntriesFast(); i++) {
       tree->GetEntry(i);
+      if(eventCut==0 && evtNum%2==1) continue; //keep even events
+      if(eventCut==1 && evtNum%2==0) continue; //keep odd events
 
       wei2 = wei;
+
+      //if training vars are included, do as few quality cuts as possible.
+      if(includeTrainingVars){
+
+	for (Int_t j = 0; j<jets->GetEntriesFast(); ++j) {
+	  TLorentzVector* jet = (TLorentzVector*) jets->At(j);
+
+	  // select jets coming from b quarks
+	  if (abs(jet_partonID->At(j)) == 5){
+	  
+	    ijet_genJetPt         = jet_genJetPt         ->At(j);
+	    ijet_pt               = jet->Pt();
+	    ijet_eta		   = jet_eta		  ->At(j);
+	    ijet_phi		   = jet->Phi();
+	    ijet_En		   = jet->E();
+	    ijet_cef		   = jet_cef		  ->At(j);
+	    ijet_nef		   = jet_nef		  ->At(j);
+	    ijet_mef		   = jet_mef		  ->At(j);
+	    ijet_nconstituents	   = jet_nconstituents	  ->At(j);
+	    ijet_chf		   = jet_chf		  ->At(j);
+	    ijet_JECUnc	   = jet_JECUnc		  ->At(j);
+	    ijet_ptLeadTrack	   = jet_ptLeadTrack	  ->At(j);
+	    ijet_vtxPt	   = jet_vtxPt		  ->At(j);
+	    ijet_vtx3dL	   = jet_vtx3dL		  ->At(j);
+	    ijet_SoftLeptPtCut	   = jet_SoftLeptPtCut	  ->At(j);
+	    ijet_dPhiMETJet	   = jet_dPhiMETJet	  ->At(j);
+	    ijet_nch		   = jet_nch		  ->At(j);
+	    ijet_vtx3deL	   = jet_vtx3deL	  ->At(j);
+	    ijet_vtxMass	   = jet_vtxMass	  ->At(j);
+	    ijet_ptRaw	   = jet_ptRaw		  ->At(j);
+	    ijet_EnRaw	   = jet_EnRaw		  ->At(j);
+	    ijet_SoftLeptptRelCut= jet_SoftLeptptRelCut ->At(j);
+	    ijet_SoftLeptdRCut	   = jet_SoftLeptdRCut	  ->At(j);
+	    ijet_partonID	   = jet_partonID	  ->At(j);
+	    ijet_dRJetGenJet      = jet_dRJetGenJet      ->At(j);
+	    ijet_emfrac = ijet_cef+ijet_nef+ijet_mef;
+	    ijet_hadfrac = ijet_chf+ijet_nch;
+	    
+	    treeOut->Fill(); //MET and rho25 do not change when looping over jets.
+
+	  }
+	}//jet loop
+
+	continue;
+      }
+
 
       // if less than two photons or jets
       if (gamma1->E() <= 0 || gamma2->E() <= 0 || jets->GetEntriesFast() < 2)
@@ -246,12 +404,6 @@ void mktree_one(const char* infile, const char* treename)
       if (mGG < minMassGG || mGG > maxMassGG || mJJ < minMassJJ || mJJ > maxMassJJ)
          continue;
 
-      // put Higgs to its mass; in principle, other algorithms are possible
-      if (correctHiggsMass) {
-         higgsGG *= 125.5/mGG;
-         higgsJJ *= 125.5/mJJ;
-      }
-
       // radion part
       TLorentzVector radion = higgsGG + higgsJJ;
 
@@ -274,12 +426,12 @@ void mktree_one(const char* infile, const char* treename)
 }
 
 //______________________________________________________________________________
-void mktree(char *input, char *output)
+void mktree(char *input, char *output, int eventCut=-1)
 {
 
    TFile* fo = TFile::Open(output, "RECREATE");
 
-   mktree_one(input, "Events");
+   mktree_one(input, "Events", eventCut);
 
    fo->Close();
    delete fo;
