@@ -61,6 +61,7 @@ class ConfigReader {
   inline float  diJetPtg2M(void) const { return _diJetPtg2M; }
   inline float  diJetMjj(void)   const { return _diJetMjj;   }
 
+  inline int  vtxSelType(void)   const { return _vtxSelType;   }
   inline int  getDoJetRegression(void)   const { return _doJetRegression;   }
   inline int  getDoControlSample(void)   const { return _doControlSample;   }
   
@@ -129,6 +130,9 @@ class ConfigReader {
   /// dijet cuts to fill dijet tree
   float _diJetPtg1M,_diJetPtg2M,_diJetMjj;
 
+  // method to select vtx. 0 for MVA, 1 for sumpt2
+  int _vtxSelType;
+
   /// regression and control sample
   int _doJetRegression,_doControlSample;
 
@@ -172,6 +176,7 @@ ConfigReader::ConfigReader( string myConfigName ) {
    _luminosity = 5089;
    _vbfMvaCat = false;
    _energyScaleCorrectionFile = "unknown";
+   _vtxSelType = 0;
    _doJetRegression = 0;
    _doControlSample = 0;
    cout << " Opening config file: " << _configName<< endl;
@@ -235,6 +240,7 @@ ConfigReader::ConfigReader( string myConfigName ) {
    if( key.find("diJetPtg2M_cut") != string::npos ) _diJetPtg2M = atof(val.c_str());
    if( key.find("diJetMjj_cut"  ) != string::npos ) _diJetMjj   = atof(val.c_str());
 
+   if( key.find("vtxSelType") != string::npos ) _vtxSelType = atoi(val.c_str());
    if( key.find("doJetRegression") != string::npos ) _doJetRegression = atoi(val.c_str());
    if( key.find("doControlSample") != string::npos ) _doControlSample = atoi(val.c_str());
 
@@ -281,6 +287,7 @@ ConfigReader::ConfigReader( string myConfigName ) {
    cout << "    - DiJet Tree pt1/M  : " << _diJetPtg1M << endl;
    cout << "    - DiJet Tree pt2/M  : " << _diJetPtg2M << endl;
    cout << "    - DiJet Tree Mjj    : " << _diJetMjj   << endl;
+   cout << "    - vtxSelType        : " << _vtxSelType << endl;
    cout << "    - doJetRegression   : " << _doJetRegression << endl;
    cout << "    - doControlSample   : " << _doControlSample << endl;
    cout << "    - skimming          : " << _doSkimming << endl;
@@ -316,6 +323,7 @@ ConfigReader& ConfigReader::operator=( const ConfigReader &c ) {
   _diJetPtg1M = c._diJetPtg1M;
   _diJetPtg2M = c._diJetPtg2M;
   _diJetMjj  = c._diJetMjj;
+  _vtxSelType = c._vtxSelType;
   _doJetRegression = c._doJetRegression;
   _doControlSample = c._doControlSample;
   return *this;

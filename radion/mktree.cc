@@ -37,7 +37,7 @@ Double_t minBJetTag = 0.679;                  // b-jet tagging threshold value
 
 // dR(gamma, gamma) and dR(gammas, jets) cuts
 Double_t maxDeltaRGG = -1;  // -1 means unset
-Double_t minDeltaRGJ = -1;  // -1 means unset
+Double_t minDeltaRGJ = 0.4;  // -1 means unset
 
 // allowed gamma+gamma mass region (in GeV)
 // Double_t minMassGG = 125 - 1.5*3;

@@ -1,4 +1,5 @@
 #!/bin/bash
+
 masses=(300 500 700 1000)
 
 #for i in {0..215}; do
@@ -26,6 +27,7 @@ for i in {0..21}; do
 	
 	echo "rm temp_${optimIndex}.root" >> $filename
     done
-    #bsub -q 8nh -J job$i $PWD/$filename
-    source $PWD/$filename &
+    chmod 755 $filename
+    bsub -q 1nd -J job$i $PWD/$filename
+    #source $PWD/$filename
 done

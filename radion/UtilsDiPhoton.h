@@ -25,10 +25,19 @@ bool xAna::selectTwoPhotons( int &i, int &j, int selVtx,
     g2.SetPtEtaPhiM( phoE[i]/cosh(etai),etai,phii, 0 ); 
   }
   
-  int pID1 = photonID(ilead , selVtx, g1.Pt(), !vetoElec[0] );
-  int pID2 = photonID(itrail, selVtx, g2.Pt(), !vetoElec[1] );
-  if ( doControlSample == 1 && ( (pID1 == 0 && pID2 == 0) || (pID1 != 0 && pID2 != 0) ) ) return false;
-  else if ( doControlSample == 0 && ( pID1 == 0 || pID2 ==0 ) ) return false; 
+  int gID1 = photonID(ilead , selVtx, g1.Pt(), !vetoElec[0] );
+  int gID2 = photonID(itrail, selVtx, g2.Pt(), !vetoElec[1] );
+  if ( doControlSample == 0 && ( gID1 == 0 || gID2 == 0 ) ) return false; 
+  else if ( doControlSample == 1 ){//redo one photon ID for the control sample
+    int gID1_inv=0, gID2_inv=0;
+    if( !mvaPhotonID(ilead,selVtx,g1.Pt(),!vetoElec[0]) ) gID1_inv=0;
+    else gID1_inv = 1 - cic4PFPhotonID(ilead,selVtx,g1.Pt(),!vetoElec[0]);//inverted
+    if( !mvaPhotonID(itrail,selVtx,g2.Pt(),!vetoElec[1]) ) gID1_inv=0;
+    else gID1_inv = 1 - cic4PFPhotonID(itrail,selVtx,g2.Pt(),!vetoElec[1]);//inverted
+
+    //Now ensure that there is one good photon and one good inverted photon
+    if( !((gID1==1 && gID2_inv==1) || (gID1_inv==1 && gID2==1)) ) return false;
+  }
 
 
   /// apply loose mva photon id cut inside the loop for mva selection

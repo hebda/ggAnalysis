@@ -320,8 +320,7 @@ public :
    vector<float> DiscriVBF_dipho_cat ; /// not used for now
    vector<float> DiscriVBF_gluglu_cat; /// not used for now
 
-   int doJetRegression;//0 for no regression, 1 for Phil's regression, 2 for Olivier's regression, set in config
-   int doRegressionTraining;//0 for normal analysis flow, 1 for preparing regression training tree
+   int doJetRegression;//0 for no regression, 1 for regression with 2 BDTs
    int doControlSample;//0 for normal analysis, 1 for control sample (invert 1 photon ID)
    TMVA::Reader *jetRegres;
 
@@ -777,7 +776,7 @@ public :
    Float_t         jetVtx3dL[470];
    Float_t         jetDPhiMETJet[470];
    //vars for regression reader:
-   Float_t jetRegPt, jetRegEta, jetRegEMFrac, jetRegHadFrac, jetRegNConstituents, jetRegVtx3dL, jetRegMET, jetRegDPhiMETJet;
+   Float_t jetRegPt, jetRegEta, jetRegEMFrac, jetRegHadFrac, jetRegNConstituents, jetRegVtx3dL, jetRegMET, jetRegDPhiMETJet, jetRegRho25;
 
    /// Variables for PU Jet ID
    Float_t         jetMVAs[500][4]; // [4] -> [3] for new ntuples before May30

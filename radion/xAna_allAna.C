@@ -186,6 +186,8 @@ int xAna::HggTreeWriteLoop(const char* filename, int ijob,
   nCutName.push_back("   --> pass 2 gam lep: "); nEvts.push_back(0);
   nCutName.push_back("   --> pass 2 gam vbf: "); nEvts.push_back(0);
 
+  vector<int> selVtxSumPt2(3);  selVtxSumPt2[0] = 0; selVtxSumPt2[1] = -1;   selVtxSumPt2[2] = -1;
+
   for (Long64_t jentry=entry_start; jentry< entry_stop ; ++jentry) {
     Long64_t ientry = LoadTree(jentry);
 
@@ -386,7 +388,10 @@ int xAna::HggTreeWriteLoop(const char* filename, int ijob,
 	double mij(-1);
 	
 	vector<int> selVtxIncl;      
-	selVtxIncl = getSelectedVertex(i,j,true, true);
+	if(_config->vtxSelType()==0)
+	  selVtxIncl = getSelectedVertex(i,j,true,true );
+	else //use sumpt2 ranking
+	  selVtxIncl = selVtxSumPt2;
 	selVtx = selVtxIncl[0];
 	if( selVtx < 0 ) continue;
 
@@ -499,7 +504,12 @@ int xAna::HggTreeWriteLoop(const char* filename, int ijob,
     _minitree->mtree_massDefVtx = hcand.M()/sqrt(phoE[ilead]*phoE[itrail])*sqrt(phoStdE[ilead]*phoStdE[itrail]);
 
     // calc again vertex to get correct vertex probability (can be different from last one in loop)
-    vector<int> sortedVertex = getSelectedVertex( ilead, itrail, true, true);
+    vector<int> sortedVertex;
+    if(_config->vtxSelType()==0)
+      sortedVertex = getSelectedVertex( ilead, itrail, true, true );
+    else //use sumpt2 ranking
+      sortedVertex = selVtxSumPt2;
+
     if( sortedVertex.size() < 2 ) sortedVertex.push_back(-1);
     if( sortedVertex.size() < 3 ) sortedVertex.push_back(-1);
 

@@ -219,8 +219,8 @@ void TMVARegression( int optimIndex, int Cat=0, TString myMethodList = "" )
   TCut mjjCut = "sqrt(pow(hJet_pt[0]*cos(hJet_phi[0])+hJet_pt[1]*cos(hJet_phi[1]),2)+pow(hJet_pt[0]*sin(hJet_phi[0])+hJet_pt[1]*sin(hJet_phi[1]),2)) < 110";
 
   if(Cat==1) mjjCut = "sqrt(pow(hJet_pt[0]*cos(hJet_phi[0])+hJet_pt[1]*cos(hJet_phi[1]),2)+pow(hJet_pt[0]*sin(hJet_phi[0])+hJet_pt[1]*sin(hJet_phi[1]),2)) > 110";
-  TCut jetPtCut="jet_pt<80";
-  if(Cat==1) jetPtCut="jet_pt>80";
+  TCut jetPtCut="jet_pt>90";
+  if(Cat==1) jetPtCut="jet_pt>90";
   //TCut trainingCut = "hJet_pt[0]>20. && hJet_pt[1]>20. && abs(hJet_eta[0])<2.5 && abs(hJet_eta[1])<2.5 && hJet_genJetPt[0]>0. && hJet_genJetPt[1]>0. && hJet_csv[0]>0.0 && hJet_csv[1]>0.0 && hJet_ptLeadTrack[0]<1500. && hJet_ptLeadTrack[1]<1500.";
   TCut trainingCut = "jet_pt>20. && abs(jet_eta)<2.5 && jet_genJetPt>0. && jet_dRJetGenJet < 0.4 && (jet_partonID)==5";
 

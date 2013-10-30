@@ -168,25 +168,14 @@ void xAna::Setup_MVA( ) {
   if(doJetRegression==1){
     cout<<" Booking b-jet energy regression" << endl;
     jetRegres->AddVariable( "jet_eta", &jetRegEta);
-    jetRegres->AddVariable( "jet_emfrac", &jetRegEta);
-    jetRegres->AddVariable( "jet_hadfrac", &jetRegEta);
+    jetRegres->AddVariable( "jet_emfrac", &jetRegEMFrac);
+    jetRegres->AddVariable( "jet_hadfrac", &jetRegHadFrac);
     jetRegres->AddVariable( "jet_nconstituents", &jetRegNConstituents);
     jetRegres->AddVariable( "jet_vtx3dL", &jetRegVtx3dL);
     jetRegres->AddVariable( "MET", &jetRegMET);
     jetRegres->AddVariable( "jet_dPhiMETJet", &jetRegDPhiMETJet);
     jetRegres->BookMVA("BDTG0","jetRegressionWeights/TMVARegression_Cat0_BDTG.weights.xml");  
     jetRegres->BookMVA("BDTG1","jetRegressionWeights/TMVARegression_Cat1_BDTG.weights.xml");  
-  }
-  else if(doJetRegression==2){
-    jetRegres->AddVariable( "jet_pt", &jetRegPt);
-    jetRegres->AddVariable( "jet_eta", &jetRegEta);
-    jetRegres->AddVariable( "jet_emfrac", &jetRegEMFrac);
-    jetRegres->AddVariable( "jet_nConstituents", &jetRegNConstituents);
-    jetRegres->AddVariable( "jet_hadfrac", &jetRegHadFrac);
-    jetRegres->AddVariable( "jet_secVtx3dL", &jetRegVtx3dL);
-    jetRegres->AddVariable( "ev_met_corr_pfmet", &jetRegMET);
-    jetRegres->AddVariable( "jet_dPhiMet", &jetRegDPhiMETJet);
-    jetRegres->BookMVA("BDT", "jetRegressionWeights/TMVARegression_BDT_Olivier.weights.xml");
   }
   //end of setup for b-jet energy regression
 
@@ -314,13 +303,13 @@ float xAna::JetRegression(int iJet){
   jetRegNConstituents = jetNConstituents[iJet];
   jetRegVtx3dL = jetVtx3dL[iJet];
   jetRegMET = recoPfMET;
-  jetRegDPhiMETJet = deltaPhi(recoPfMETPhi, jetPhi[iJet]);
-  
+  float tmpPi = 3.1415927, tmpDPhi=fabs(jetPhi[iJet]-recoPfMETPhi);
+  if(tmpDPhi>tmpPi) tmpDPhi=2*tmpPi-tmpDPhi;
+  jetRegDPhiMETJet = tmpDPhi;
+
   if(doJetRegression==1){
-    if(jetPt[iJet]<80) return jetPt[iJet]*jetRegres->EvaluateRegression("BDTG0")[0];
-    if(jetPt[iJet]>80) return jetPt[iJet]*jetRegres->EvaluateRegression("BDTG1")[0];
+    if(jetPt[iJet]<90) return jetPt[iJet]*jetRegres->EvaluateRegression("BDTG0")[0];
+    if(jetPt[iJet]>90) return jetPt[iJet]*jetRegres->EvaluateRegression("BDTG1")[0];
   }
-  else if(doJetRegression==2)
-    return (float)(jetRegres->EvaluateMVA("BDT"));
   else return jetPt[iJet];
 }

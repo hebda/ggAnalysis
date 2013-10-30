@@ -133,7 +133,7 @@ void AddRegVars(int optimIndex, char* inputFileName, char* outputFileName, int m
       hJet_genJetPt[0]=ijet_genJetPt;
       hJet_hasSoftLept[0]=0;//for now
       hJet_dRJetGenJet[0]=ijet_dRJetGenJet;
-      float corr_factor = hJet_pt[0] < 80 ? (float)(readerRegres->EvaluateRegression("BDTG0")[0]) : (float)(readerRegres->EvaluateRegression("BDTG1")[0]);
+      float corr_factor = hJet_pt[0] < 90 ? (float)(readerRegres->EvaluateRegression("BDTG0")[0]) : (float)(readerRegres->EvaluateRegression("BDTG1")[0]);
       hJet_ptCorr[0] = hJet_pt[0]*corr_factor;
       ++iHiggsJet;
       continue;
@@ -148,7 +148,7 @@ void AddRegVars(int optimIndex, char* inputFileName, char* outputFileName, int m
       hJet_genJetPt[1]=ijet_genJetPt;
       hJet_hasSoftLept[1]=0;//for now
       hJet_dRJetGenJet[1]=ijet_dRJetGenJet;
-      float corr_factor = hJet_pt[1] < 80 ? (float)(readerRegres->EvaluateRegression("BDTG0")[0]) : (float)(readerRegres->EvaluateRegression("BDTG1")[0]);
+      float corr_factor = hJet_pt[1] < 90 ? (float)(readerRegres->EvaluateRegression("BDTG0")[0]) : (float)(readerRegres->EvaluateRegression("BDTG1")[0]);
       hJet_ptCorr[1] = hJet_pt[1]*corr_factor;
       ++iHiggsJet;
     }
