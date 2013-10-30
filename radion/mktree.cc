@@ -78,7 +78,7 @@ void mktree_one(const char* infile, const char* treename, int eventCut)
 
    // variables for input tree
    Long64_t evtNum;
-   float wei;
+   float mc_wei;
    TLorentzVector *gamma1, *gamma2;
    TClonesArray* jets;
    TArrayF* bJetTags;
@@ -137,7 +137,7 @@ void mktree_one(const char* infile, const char* treename, int eventCut)
 
    // associate input tree branches with variables
    tree->SetBranchAddress("evtNum", &evtNum);
-   tree->SetBranchAddress("wei", &wei);
+   tree->SetBranchAddress("wei", &mc_wei);
    tree->SetBranchAddress("gamma1", &gamma1);
    tree->SetBranchAddress("gamma2", &gamma2);
    tree->SetBranchAddress("jets", &jets);
@@ -171,14 +171,13 @@ void mktree_one(const char* infile, const char* treename, int eventCut)
    TTree* treeOut = new TTree(treename, "Radion tree");
 
    // variables for output tree
-   Double_t wei2;
    Double_t mGG, mJJ, mRad, ptRad, ptG1, ptG2;
    Double_t deltaRGJ, deltaRGG;
    Int_t bJetTagCategory;
 
    // associate output tree branches with variables
    treeOut->Branch("evtNum", &evtNum);
-   treeOut->Branch("wei", &wei2);
+   treeOut->Branch("wei", &mc_wei);
    if(includeTrainingVars){
      treeOut->Branch("jet_genJetPt",     &ijet_genJetPt          );
      treeOut->Branch("jet_pt",           &ijet_pt                );
@@ -229,8 +228,6 @@ void mktree_one(const char* infile, const char* treename, int eventCut)
       tree->GetEntry(i);
       if(eventCut==0 && evtNum%2==1) continue; //keep even events
       if(eventCut==1 && evtNum%2==0) continue; //keep odd events
-
-      wei2 = wei;
 
       //if training vars are included, do as few quality cuts as possible.
       if(includeTrainingVars){
